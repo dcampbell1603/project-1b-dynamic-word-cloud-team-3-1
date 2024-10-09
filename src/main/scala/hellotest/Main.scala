@@ -4,7 +4,7 @@ import scala.io.StdIn
 import scala.sys.process._
 import mainargs.{main, arg, ParserForMethods, Flag}
 import org.knowm.xchart.{PieChartBuilder, SwingWrapper}
-
+import scala.language.unsafeNulls
 
 object Main extends InputProcessor with WordCloudProcessor with OutputHandler:
 

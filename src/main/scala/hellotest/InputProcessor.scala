@@ -1,5 +1,6 @@
 package hellotest
 import scala.collection.mutable
+import scala.language.unsafeNulls
 
 trait InputProcessor
     def processInput(
@@ -12,25 +13,24 @@ trait InputProcessor
         cloudSize: Int,
         minFrequency: Int,
         ignoreList: Set[String],
-        updateChart: Seq[(String, Int)] => Unit
+        updateChart: Seq[(String, Int)] => Unit,
     ): Unit = {
         var steps = 0
         val words = 
-        import scala.language.unsafeNulls
         lines
-        .flatMap(l => l.split("(?U)[^\\p{Alpha}0-9']+"))
-        .map(_.toLowerCase)
+        .flatMap { line => Option(line.split("(?U)[^\\p{Alpha}0-9']+").nn).toSeq.flatten }
+        .map(word => word.nn.toLowerCase)
         // .filter(word => word != null && word.length >= minLength)
-        .filter(word => word != null && word.length >= minLength && !ignoreList.contains(word)) // Ignore words from ignore list
+        .filter(word => word.length >= minLength && !ignoreList.contains(word)) // Ignore words from ignore list
 
 
         words.foreach { word =>
-        updateWindow(word, window, wordFrequency, windowSize)
+        this.updateWindow(word, window,wordFrequency, windowSize)
         steps += 1
 
         // Update and print word cloud every `everyKSteps`
         if (window.size >= windowSize && steps % everyKSteps == 0) {
-            printWordCloud(wordFrequency, cloudSize, minFrequency, updateChart)
+            this.printWordCloud(wordFrequency, cloudSize, minFrequency, updateChart)
         }
      }
 }
