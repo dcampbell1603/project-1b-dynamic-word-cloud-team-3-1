@@ -2,7 +2,7 @@ package hellotest
 import scala.collection.mutable
 import scala.language.unsafeNulls
 
-trait InputProcessor
+trait InputProcessor { self: WordCloudProcessor with OutputHandler =>
     def processInput(
         lines: Iterator[String],
         minLength: Int,
@@ -25,12 +25,13 @@ trait InputProcessor
 
 
         words.foreach { word =>
-        this.updateWindow(word, window,wordFrequency, windowSize)
-        steps += 1
+            updateWindow(word, window,wordFrequency, windowSize)
+            steps += 1
 
         // Update and print word cloud every `everyKSteps`
         if (window.size >= windowSize && steps % everyKSteps == 0) {
-            this.printWordCloud(wordFrequency, cloudSize, minFrequency, updateChart)
+            printWordCloud(wordFrequency, cloudSize, minFrequency, updateChart)
         }
      }
+    }
 }
